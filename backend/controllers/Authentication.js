@@ -9,11 +9,10 @@ class Authentication {
   register = (req, res) => {
     const { username, email, password, phone, role } = req.body;
 
-    const phoneRegex = /^(\+61|0)[0-9]{9}$/;
-    if (!phoneRegex.test(phone)) {
-      return res
-        .status(400)
-        .json({ success: false, message: "Invalid phone number format." });
+    const phoneRegex = /^04\d{8}$/;
+        if (!phoneRegex.test(phone)) {
+        return res.status(400).json({success: false,message: "Invalid phone number format. It must be in the form 04xxxxxxxx.",});
+
     }
 
     this.userModel.findByUsernameOrEmail(
@@ -91,7 +90,7 @@ class Authentication {
       return res.json({
         success: true,
         message: "Login successful.",
-        user: user.getBasicInfo(), // ✅ must include .role
+        user: user.getBasicInfo(),
       });
     });
   };
