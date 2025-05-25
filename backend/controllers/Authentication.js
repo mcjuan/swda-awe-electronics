@@ -10,9 +10,14 @@ class Authentication {
     const { username, email, password, phone, role } = req.body;
 
     const phoneRegex = /^04\d{8}$/;
-        if (!phoneRegex.test(phone)) {
-        return res.status(400).json({success: false,message: "Invalid phone number format. It must be in the form 04xxxxxxxx.",});
-
+    if (!phoneRegex.test(phone)) {
+      return res
+        .status(400)
+        .json({
+          success: false,
+          message:
+            "Invalid phone number format. It must be in the form 04xxxxxxxx.",
+        });
     }
 
     this.userModel.findByUsernameOrEmail(
