@@ -47,11 +47,12 @@ const RegisterPage: React.FC = () => {
       return;
     }
 
-    const phoneRegex = /^(\+61|0)[0-9]{9}$/;
+    const phoneRegex = /^04\d{8}$/;
     if (!phoneRegex.test(phone)) {
-      setError("Invalid Australian phone number format.");
+      setError("Invalid phone number format. Must be 04xxxxxxxx.");
       return;
     }
+
 
     const response = await register({ username, email, password, phone, role });
 
@@ -82,6 +83,7 @@ const RegisterPage: React.FC = () => {
               <Input
                 id="username"
                 type="text"
+                placeholder="Emter username"
                 required
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
@@ -105,7 +107,7 @@ const RegisterPage: React.FC = () => {
               <Input
                 id="phone"
                 type="tel"
-                placeholder="0xxxxxxxxx"
+                placeholder="format (04xxxxxxxx)"
                 required
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
