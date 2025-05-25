@@ -12,7 +12,7 @@ interface AuthContextType {
   currentUser: Account | null;
   login: (
     credentials: AuthCredentials
-  ) => Promise<{ success: boolean; message: string }>;
+  ) => Promise<{ success: boolean; message: string; user?: Account }>;
   register: (
     data: RegistrationData
   ) => Promise<{ success: boolean; message: string }>;
@@ -22,9 +22,7 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-export const AuthProvider: React.FC<{ children: ReactNode }> = ({
-  children,
-}) => {
+export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [currentUser, setCurrentUser] = useState<Account | null>(() => {
     const storedUser = localStorage.getItem("currentUser");
     try {
@@ -34,6 +32,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
       return null;
     }
   });
+
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   useEffect(() => {
@@ -47,11 +46,17 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
   const login = async (credentials: AuthCredentials) => {
     setIsLoading(true);
     const response = await apiLogin(credentials);
+
     if (response.success && response.user) {
       setCurrentUser(response.user);
     }
+
     setIsLoading(false);
-    return { success: response.success, message: response.message };
+    return {
+      success: response.success,
+      message: response.message,
+      user: response.user,
+    };
   };
 
   const register = async (data: RegistrationData) => {

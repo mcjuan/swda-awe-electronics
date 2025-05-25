@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/card";
 
 const LoginPage: React.FC = () => {
-  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const { login, isLoading } = useAuth();
@@ -23,9 +23,18 @@ const LoginPage: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
-    const response = await login({ email, password });
-    if (response.success) {
-      navigate("/");
+
+    const response = await login({ username, password });
+
+    console.log("User role after login:", response.user?.role); 
+
+    if (response.success && response.user) {
+      const role = response.user.role;
+      if (role === "administrator") {
+        navigate("/dashboard");
+      } else {
+        navigate("/");
+      }
     } else {
       setError(response.message);
     }
@@ -37,20 +46,19 @@ const LoginPage: React.FC = () => {
         <CardHeader>
           <CardTitle className="text-2xl">Login</CardTitle>
           <CardDescription>
-            Enter your email below to login to your account.
+            Enter your username and password to login.
           </CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
+              <Label htmlFor="username">Username</Label>
               <Input
-                id="email"
-                type="email"
-                placeholder="m@example.com"
+                id="username"
+                type="text"
                 required
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
                 disabled={isLoading}
               />
             </div>
@@ -73,7 +81,7 @@ const LoginPage: React.FC = () => {
         </CardContent>
         <CardFooter className="text-center text-sm">
           Don't have an account?{" "}
-          <Link to="/register" className="underline hover:text-blue-600">
+          <Link to="/register" className="underline hover:text-blue-600 ml-1">
             Register
           </Link>
         </CardFooter>
