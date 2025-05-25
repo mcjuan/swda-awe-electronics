@@ -84,14 +84,14 @@ function Header() {
                 <User size={18} />
                 <span className="hidden sm:ml-1 sm:inline">Login</span>
               </Link>
-              <Link
+              {/* <Link
                 to="/register"
                 className="text-gray-600 hover:text-blue-600 transition-colors px-2 py-2 sm:px-3 rounded-md text-sm font-medium flex items-center"
                 title="Register"
               >
                 <UserPlus size={18} />{" "}
                 <span className="hidden sm:ml-1 sm:inline">Register</span>
-              </Link>
+              </Link> */}
             </>
           )}
         </nav>

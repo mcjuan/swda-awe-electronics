@@ -53,7 +53,6 @@ const RegisterPage: React.FC = () => {
       return;
     }
 
-
     const response = await register({ username, email, password, phone, role });
 
     if (response.success) {
@@ -83,7 +82,7 @@ const RegisterPage: React.FC = () => {
               <Input
                 id="username"
                 type="text"
-                placeholder="Emter username"
+                placeholder="Enter username"
                 required
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
