@@ -1,4 +1,4 @@
-const Account = require("./Account");
+import Account from "./Account.js";
 
 class Customer extends Account {
   constructor(id, username, email, phone) {
@@ -10,4 +10,4 @@ class Customer extends Account {
   }
 }
 
-module.exports = Customer;
+export default Customer;

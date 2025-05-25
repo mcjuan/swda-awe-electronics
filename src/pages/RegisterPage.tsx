@@ -163,7 +163,7 @@ const RegisterPage: React.FC = () => {
         </CardContent>
         <CardFooter className="text-center text-sm">
           Already have an account?{" "}
-          <Link to="/login" className="underline hover:text-blue-600">
+          <Link to="/login" className="underline hover:text-blue-600 ml-1">
             Login
           </Link>
         </CardFooter>
