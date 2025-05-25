@@ -22,7 +22,9 @@ import {
 import type { UserRole } from "@/types/user";
 
 const RegisterPage: React.FC = () => {
+  const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [role, setRole] = useState<UserRole>("customer");
@@ -39,15 +41,25 @@ const RegisterPage: React.FC = () => {
       setError("Passwords do not match.");
       return;
     }
+
     if (password.length < 6) {
       setError("Password must be at least 6 characters long.");
       return;
     }
 
-    const response = await register({ email, password, role });
+    const phoneRegex = /^04\d{8}$/;
+    if (!phoneRegex.test(phone)) {
+      setError("Invalid phone number format. Must be 04xxxxxxxx.");
+      return;
+    }
+
+    const response = await register({ username, email, password, phone, role });
+
     if (response.success) {
       setSuccessMessage(response.message + " You can now log in.");
+      setUsername("");
       setEmail("");
+      setPhone("");
       setPassword("");
       setConfirmPassword("");
       setRole("customer");
@@ -66,6 +78,18 @@ const RegisterPage: React.FC = () => {
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
+              <Label htmlFor="username">Username</Label>
+              <Input
+                id="username"
+                type="text"
+                placeholder="Enter username"
+                required
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                disabled={isLoading}
+              />
+            </div>
+            <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
               <Input
                 id="email"
@@ -74,6 +98,18 @@ const RegisterPage: React.FC = () => {
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
+                disabled={isLoading}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="phone">Phone</Label>
+              <Input
+                id="phone"
+                type="tel"
+                placeholder="format (04xxxxxxxx)"
+                required
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
                 disabled={isLoading}
               />
             </div>
@@ -115,15 +151,9 @@ const RegisterPage: React.FC = () => {
                 </SelectContent>
               </Select>
             </div>
-            {error && (
-              <p className="text-sm text-red-600 data-[testid=error-message]">
-                {error}
-              </p>
-            )}
+            {error && <p className="text-sm text-red-600">{error}</p>}
             {successMessage && (
-              <p className="text-sm text-green-600 data-[testid=success-message]">
-                {successMessage}
-              </p>
+              <p className="text-sm text-green-600">{successMessage}</p>
             )}
             <Button type="submit" className="w-full" disabled={isLoading}>
               {isLoading ? "Registering..." : "Create Account"}
@@ -132,7 +162,7 @@ const RegisterPage: React.FC = () => {
         </CardContent>
         <CardFooter className="text-center text-sm">
           Already have an account?{" "}
-          <Link to="/login" className="underline hover:text-blue-600">
+          <Link to="/login" className="underline hover:text-blue-600 ml-1">
             Login
           </Link>
         </CardFooter>

@@ -1,71 +1,54 @@
-import type { Account, UserRole } from "@/types/user";
-
-const mockUserDatabase: Account[] = [];
-
-const findUserByEmail = (email: string): Account | undefined => {
-  return mockUserDatabase.find((user) => user.email === email.toLowerCase());
-};
-
 export interface AuthCredentials {
+  username: string;
+  password: string;
+}
+
+export interface RegistrationData {
+  username: string;
   email: string;
-  password?: string;
+  password: string;
+  phone: string;
+  role: string;
 }
 
-export interface RegistrationData extends AuthCredentials {
-  role: UserRole;
-}
-
+// --- Register a new user ---
 export const registerUser = async (
   data: RegistrationData
-): Promise<{ success: boolean; message: string; user?: Account }> => {
-  await new Promise((resolve) => setTimeout(resolve, 300));
+): Promise<{ success: boolean; message: string }> => {
+  try {
+    const response = await fetch("http://localhost:3001/api/register", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
+    });
 
-  if (!data.email || !data.password) {
-    return { success: false, message: "Email and password are required." };
+    const result = await response.json();
+    return result;
+  } catch (error) {
+    return { success: false, message: "Failed to connect to server." };
   }
-  if (data.password.length < 6) {
-    return {
-      success: false,
-      message: "Password must be at least 6 characters.",
-    };
-  }
-
-  if (findUserByEmail(data.email)) {
-    return { success: false, message: "User with this email already exists." };
-  }
-
-  const newUser: Account = {
-    id: `user-${Date.now()}`,
-    email: data.email.toLowerCase(),
-    role: data.role,
-  };
-  mockUserDatabase.push(newUser);
-  const { ...userForState } = newUser;
-  return {
-    success: true,
-    message: "Registration successful!",
-    user: userForState,
-  };
 };
 
+// --- Login a user ---
 export const loginUser = async (
   credentials: AuthCredentials
-): Promise<{ success: boolean; message: string; user?: Account }> => {
-  await new Promise((resolve) => setTimeout(resolve, 300));
+): Promise<{ success: boolean; message: string; user?: any }> => {
+  try {
+    const response = await fetch("http://localhost:3001/api/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(credentials),
+    });
 
-  const user = findUserByEmail(credentials.email);
-
-  if (!user) {
-    return { success: false, message: "Invalid email or password." };
+    const result = await response.json();
+    return result;
+  } catch (error) {
+    return { success: false, message: "Failed to connect to server." };
   }
-  if (!credentials.password) {
-    return { success: false, message: "Password is required." };
-  }
-  const { ...userForState } = user;
-  return { success: true, message: "Login successful!", user: userForState };
 };
 
-export const logoutUser = async (): Promise<{ success: boolean }> => {
-  await new Promise((resolve) => setTimeout(resolve, 100));
-  return { success: true };
+// --- Logout (stub) ---
+export const logoutUser = async (): Promise<void> => {
+  // Stub for future use
+  return Promise.resolve();
 };
