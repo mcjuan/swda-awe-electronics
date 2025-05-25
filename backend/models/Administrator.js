@@ -1,4 +1,4 @@
-const Account = require("./Account");
+import Account from "./Account.js";
 
 class Administrator extends Account {
   constructor(id, username, email, phone) {
@@ -10,4 +10,4 @@ class Administrator extends Account {
   }
 }
 
-module.exports = Administrator;
+export default Administrator;

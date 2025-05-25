@@ -26,7 +26,7 @@ const LoginPage: React.FC = () => {
 
     const response = await login({ username, password });
 
-    console.log("User role after login:", response.user?.role); 
+    console.log("User role after login:", response.user?.role);
 
     if (response.success && response.user) {
       const role = response.user.role;
