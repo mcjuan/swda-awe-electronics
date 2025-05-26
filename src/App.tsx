@@ -12,6 +12,7 @@ import ProfilePage from "./pages/ProfilePage";
 import ProductDetailPage from "./pages/ProductDetailPage";
 import DashboardPage from "./pages/DashboardPage";
 import CheckoutPage from "./pages/CheckoutPage";
+import InvoicePage from "./pages/InvoicePage";
 
 // Route Guards
 import AdminRoute from "./lib/AdminRoute";
@@ -62,6 +63,14 @@ function App() {
             }
           />
 
+          <Route
+            path="/invoice"
+            element={
+              <CustomerRoute>
+                <InvoicePage />
+              </CustomerRoute>
+            }
+          />
           {/* Public product details */}
           <Route path="/product/:productId" element={<ProductDetailPage />} />
 

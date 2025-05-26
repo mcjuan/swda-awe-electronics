@@ -6,6 +6,7 @@ import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import type { Product } from "@/types/product";
+import { useNavigate } from "react-router-dom";
 
 const AU_STATES = ["ACT", "NSW", "NT", "QLD", "SA", "TAS", "VIC", "WA"];
 
@@ -23,6 +24,7 @@ const CheckoutPage: React.FC = () => {
     state: "",
     postcode: "",
   });
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchProducts().then(setProducts);
@@ -59,15 +61,19 @@ const CheckoutPage: React.FC = () => {
   };
 
   const handlePostcodeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    // Only allow 4 numeric characters
     const value = e.target.value.replace(/\D/g, "").slice(0, 4);
     setForm({ ...form, postcode: value });
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Mock submit logic
-    alert("Order placed! (mock)");
+    navigate("/invoice", {
+      state: {
+        form,
+        cart: cartDetails,
+        total: totalPrice,
+      },
+    });
   };
 
   return (
