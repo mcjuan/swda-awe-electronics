@@ -11,12 +11,14 @@ import CartPage from "./pages/CartPage";
 import ProfilePage from "./pages/ProfilePage";
 import ProductDetailPage from "./pages/ProductDetailPage";
 import DashboardPage from "./pages/DashboardPage";
+import AdminProductPage from "./pages/AdminProductPage";
 
 // Route Guards
 import AdminRoute from "./lib/AdminRoute";
 import CustomerRoute from "./lib/CustomerRoute";
+import UserRoute from "./lib/UserRoute";
 
-// Dummy product initializer
+// Dummy data setup
 import { initializeDummyProducts } from "@/services/productService";
 
 function App() {
@@ -29,10 +31,12 @@ function App() {
       <Header />
       <main className="pt-4 pb-8">
         <Routes>
+          {/* Public Routes */}
           <Route path="/" element={<HomePage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
-          
+          <Route path="/product/:productId" element={<ProductDetailPage />} />
+
           {/* Customer-only routes */}
           <Route
             path="/cart"
@@ -42,24 +46,31 @@ function App() {
               </CustomerRoute>
             }
           />
+
+          {/* Shared profile route (admin + customer) */}
           <Route
             path="/profile"
             element={
-              <CustomerRoute>
+              <UserRoute>        {/* ✅ allows any logged-in user */}
                 <ProfilePage />
-              </CustomerRoute>
+              </UserRoute>
             }
           />
 
-          {/* Public product details */}
-          <Route path="/product/:productId" element={<ProductDetailPage />} />
-
-          {/* Admin-only route */}
+          {/* Admin-only routes */}
           <Route
             path="/dashboard"
             element={
               <AdminRoute>
                 <DashboardPage />
+              </AdminRoute>
+            }
+          />
+          <Route
+            path="/adminProduct"
+            element={
+              <AdminRoute>
+                <AdminProductPage />
               </AdminRoute>
             }
           />
