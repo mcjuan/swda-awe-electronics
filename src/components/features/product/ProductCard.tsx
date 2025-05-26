@@ -18,7 +18,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
       className="block border rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 h-full"
     >
       <div className="flex flex-col h-full p-4">
-        <div className="aspect-w-1 aspect-h-1 w-full overflow-hidden rounded-md bg-gray-200 lg:h-48 mb-4">
+        <div className="aspect-w-1 aspect-h-1 w-full overflow-hidden rounded-md bg-white lg:h-48 mb-4">
           {product.image_url ? (
             <img
               src={product.image_url}
@@ -33,7 +33,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
             <img
               src="/images/noImageAvailable.jpeg"
               alt="No image available"
-              className="h-full w-full object-contain object-center bg-gray-200"
+              className="h-full w-full object-contain object-center bg-white"
             />
           )}
         </div>
