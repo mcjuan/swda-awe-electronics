@@ -4,6 +4,8 @@ import { fetchProducts } from "@/services/productService";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Link } from "react-router-dom";
+
 import type { Product } from "@/types/product";
 
 const CartPage: React.FC = () => {
@@ -122,7 +124,9 @@ const CartPage: React.FC = () => {
             <span className="text-xl font-bold">Total:</span>
             <span className="text-xl font-bold">${totalPrice.toFixed(2)}</span>
           </div>
-          <Button className="mt-6 w-full">Go to Checkout</Button>
+          <Link to="/checkout">
+            <Button className="mt-6 w-full">Go to Checkout</Button>
+          </Link>
         </>
       )}
     </div>

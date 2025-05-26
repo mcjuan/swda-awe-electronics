@@ -11,6 +11,7 @@ import CartPage from "./pages/CartPage";
 import ProfilePage from "./pages/ProfilePage";
 import ProductDetailPage from "./pages/ProductDetailPage";
 import DashboardPage from "./pages/DashboardPage";
+import CheckoutPage from "./pages/CheckoutPage";
 
 // Route Guards
 import AdminRoute from "./lib/AdminRoute";
@@ -48,6 +49,15 @@ function App() {
             element={
               <CustomerRoute>
                 <ProfilePage />
+              </CustomerRoute>
+            }
+          />
+
+          <Route
+            path="/checkout"
+            element={
+              <CustomerRoute>
+                <CheckoutPage />
               </CustomerRoute>
             }
           />
