@@ -11,7 +11,7 @@ import { useNavigate } from "react-router-dom";
 const AU_STATES = ["ACT", "NSW", "NT", "QLD", "SA", "TAS", "VIC", "WA"];
 
 const CheckoutPage: React.FC = () => {
-  const { cartItems } = useCart();
+  const { cartItems, clearCart } = useCart();
   const { currentUser } = useAuth();
   const [products, setProducts] = useState<Product[]>([]);
   const [form, setForm] = useState({
@@ -67,6 +67,7 @@ const CheckoutPage: React.FC = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    clearCart();
     navigate("/invoice", {
       state: {
         form,

@@ -48,7 +48,7 @@ const InvoicePage: React.FC = () => {
     doc.text("Invoice", 14, 52);
     doc.setFont(undefined, "normal");
 
-    doc.setFontSize(12);
+    doc.setFontSize(11);
     doc.text(`Order placed: ${orderDateString}`, 14, 62);
     doc.text(`Name: ${form.name}`, 14, 70);
     doc.text(`Email: ${form.email}`, 14, 78);
@@ -77,6 +77,8 @@ const InvoicePage: React.FC = () => {
     y += 8;
 
     // Table rows
+    doc.setFontSize(11);
+
     cart.forEach((item: any) => {
       const productLines = doc.splitTextToSize(String(item.name), 100);
       let lineY = y;
