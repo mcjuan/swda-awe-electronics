@@ -1,18 +1,33 @@
 import React, { useEffect, useState } from "react";
-import { useCart } from "@/context/CartContext";
-import { fetchProducts } from "@/services/productService";
-import { Card, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetClose,
+} from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Card, CardHeader, CardTitle } from "@/components/ui/card";
+import { useCart } from "@/context/CartContext";
+import { fetchProducts } from "@/services/productService";
 import type { Product } from "@/types/product";
+import { Link } from "react-router-dom";
 
-const CartPage: React.FC = () => {
+interface CartSideBarProps {
+  isOpen: boolean;
+  onClose: () => void;
+}
+
+const CartSideBar: React.FC<CartSideBarProps> = ({ isOpen, onClose }) => {
   const { cartItems, removeFromCart, addToCart } = useCart();
   const [products, setProducts] = useState<Product[]>([]);
 
   useEffect(() => {
-    fetchProducts().then(setProducts);
-  }, []);
+    if (isOpen) {
+      fetchProducts().then(setProducts);
+    }
+  }, [isOpen]);
 
   // Merge cartItems with product details
   const cartDetails = cartItems
@@ -27,8 +42,10 @@ const CartPage: React.FC = () => {
     0
   );
 
+  // Handle quantity change for a cart item
   const handleQuantityChange = (id: number, value: number, stock: number) => {
     if (value < 1 || value > stock) return;
+    // Set the new quantity by replacing the item
     addToCart({
       id,
       quantity: value - (cartItems.find((i) => i.id === id)?.quantity ?? 0),
@@ -36,26 +53,37 @@ const CartPage: React.FC = () => {
   };
 
   return (
-    <div className="container mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-6">Shopping Cart</h1>
-      {cartDetails.length === 0 ? (
-        <p>Your cart is empty.</p>
-      ) : (
-        <>
-          <div className="grid gap-6 mb-8">
-            {cartDetails.map((item) => (
-              <Card key={item.id}>
+    <Sheet open={isOpen} onOpenChange={onClose}>
+      <SheetContent
+        side="right"
+        className="w-[40rem] max-w-full"
+        style={{ maxWidth: "100vw" }}
+      >
+        <SheetHeader>
+          <SheetTitle>Your Cart</SheetTitle>
+          <SheetClose asChild>
+            {/* Only one close button in the SheetHeader */}
+          </SheetClose>
+        </SheetHeader>
+        <div className="flex-grow overflow-y-auto p-4">
+          {cartDetails.length === 0 ? (
+            <p className="text-center text-gray-500">Your cart is empty.</p>
+          ) : (
+            cartDetails.map((item) => (
+              <Card key={item.id} className="mb-4">
                 <CardHeader className="flex items-center">
                   <img
                     src={item.image_url}
                     alt={item.name}
-                    className="w-20 h-20 object-contain mr-6"
+                    className="w-16 h-16 object-contain mr-4"
                   />
                   <div className="flex-grow">
-                    <CardTitle className="text-lg font-medium">
+                    <CardTitle className="text-sm font-medium">
                       {item.name}
                     </CardTitle>
-                    <p className="text-gray-600">${item.price.toFixed(2)}</p>
+                    <p className="text-sm text-gray-600">
+                      ${item.price.toFixed(2)}
+                    </p>
                     <div className="flex items-center gap-2 mt-2">
                       <Button
                         size="icon"
@@ -85,9 +113,12 @@ const CartPage: React.FC = () => {
                             item.stock
                           )
                         }
+                        style={{
+                          MozAppearance: "textfield",
+                        }}
                         className="w-14 h-7 px-2 py-1 text-center"
-                        style={{ MozAppearance: "textfield" }}
                       />
+
                       <Button
                         size="icon"
                         variant="outline"
@@ -116,17 +147,26 @@ const CartPage: React.FC = () => {
                   </Button>
                 </CardHeader>
               </Card>
-            ))}
+            ))
+          )}
+        </div>
+        <div className="p-4 border-t">
+          <Link to="/cart">
+            <Button className="w-full mb-2" variant="outline" onClick={onClose}>
+              View Full Cart
+            </Button>
+          </Link>
+          <div className="flex justify-between items-center mb-4">
+            <span className="text-lg font-bold">Total:</span>
+            <span className="text-lg font-bold">${totalPrice.toFixed(2)}</span>
           </div>
-          <div className="flex justify-between items-center border-t pt-4">
-            <span className="text-xl font-bold">Total:</span>
-            <span className="text-xl font-bold">${totalPrice.toFixed(2)}</span>
-          </div>
-          <Button className="mt-6 w-full">Go to Checkout</Button>
-        </>
-      )}
-    </div>
+          <Button className="w-full" onClick={onClose}>
+            Go to Checkout
+          </Button>
+        </div>
+      </SheetContent>
+    </Sheet>
   );
 };
 
-export default CartPage;
+export default CartSideBar;
