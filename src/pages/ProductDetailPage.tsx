@@ -1,15 +1,37 @@
-import React from "react";
+import React, { useState } from "react";
 import { useLocation, Navigate } from "react-router-dom";
 import type { Product } from "@/types/product";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { useCart } from "@/context/CartContext";
+import { toast } from "sonner";
 
 const ProductDetailPage: React.FC = () => {
   const location = useLocation();
   const product = location.state?.product as Product;
+  const { addToCart } = useCart();
+  const [quantity, setQuantity] = useState(1);
 
   // If no product data is passed, redirect to the home page
   if (!product) {
     return <Navigate to="/" replace />;
   }
+
+  const handleAddToCart = () => {
+    if (quantity > 0 && quantity <= product.stock) {
+      addToCart({ id: product.id, quantity });
+      toast(<span className="text-xl font-bold">Added to cart</span>, {
+        description: (
+          <span className="text-lg">
+            x{quantity} {product.name} was added to your cart.
+          </span>
+        ),
+        position: "bottom-right",
+        duration: 3000,
+        className: "min-w-[320px] py-6",
+      });
+    }
+  };
 
   return (
     <div className="container mx-auto p-4 md:p-8">
@@ -61,6 +83,29 @@ const ProductDetailPage: React.FC = () => {
             {product.stock > 0 ? "In Stock" : "Out of Stock"} (Qty:{" "}
             {product.stock})
           </p>
+
+          {/* Quantity input and Add to Cart button */}
+          <div className="flex items-center gap-3 mb-2">
+            <Input
+              type="number"
+              min={1}
+              max={product.stock}
+              value={quantity}
+              onChange={(e) =>
+                setQuantity(
+                  Math.max(1, Math.min(product.stock, Number(e.target.value)))
+                )
+              }
+              className="w-24"
+              disabled={product.stock === 0}
+            />
+            <Button
+              onClick={handleAddToCart}
+              disabled={product.stock === 0 || quantity < 1}
+            >
+              Add to Cart
+            </Button>
+          </div>
         </div>
       </div>
     </div>

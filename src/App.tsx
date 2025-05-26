@@ -18,6 +18,7 @@ import CustomerRoute from "./lib/CustomerRoute";
 
 // Dummy product initializer
 import { initializeDummyProducts } from "@/services/productService";
+import { Toaster } from "sonner";
 
 function App() {
   useEffect(() => {
@@ -32,7 +33,7 @@ function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
-          
+
           {/* Customer-only routes */}
           <Route
             path="/cart"
@@ -65,6 +66,7 @@ function App() {
           />
         </Routes>
       </main>
+      <Toaster position="bottom-right" />
     </>
   );
 }
