@@ -18,6 +18,7 @@ class Authentication {
           message:
             "Invalid phone number format. It must be in the form 04xxxxxxxx.",
         });
+
     }
 
     this.userModel.findByUsernameOrEmail(
