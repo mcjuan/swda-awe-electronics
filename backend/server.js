@@ -4,7 +4,9 @@ import sqlite3 from "sqlite3";
 import path from "path";
 import { fileURLToPath } from "url";
 import UserModel from "./models/UserModel.js";
-import Authentication from "./controllers/Authentication.js";
+import Authentication from "./controllers/AuthController.js";
+import Product from "./models/Product.js";
+import ProductController from "./controllers/ProductController.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -36,10 +38,16 @@ app.use(express.json());
 // Inject Model → Controller
 const userModel = new UserModel(db);
 const auth = new Authentication(userModel);
+// Initialize Product model and controller
+const productModel = new Product(db);
+const productController = new ProductController(productModel);
 
-// Routes
+// Auth Routes
 app.post("/api/register", auth.register);
 app.post("/api/login", auth.login);
+
+// Product Routes
+app.get("/api/products", productController.getAllProducts);
 
 // Start Server
 app.listen(PORT, () => {

@@ -1,9 +1,19 @@
+// export interface Product {
+//   id: string | number;
+//   name: string;
+//   description: string;
+//   price: number;
+//   imageUrl?: string;
+//   category?: string;
+//   stockStatus: "in-stock" | "out-of-stock";
+// }
+
 export interface Product {
-  id: string | number;
+  id: number;
   name: string;
   description: string;
   price: number;
-  imageUrl?: string;
-  category?: string;
-  stockStatus: "in-stock" | "out-of-stock";
+  stock: number;
+  category_id: number;
+  image_url: string;
 }
