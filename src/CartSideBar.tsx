@@ -160,9 +160,11 @@ const CartSideBar: React.FC<CartSideBarProps> = ({ isOpen, onClose }) => {
             <span className="text-lg font-bold">Total:</span>
             <span className="text-lg font-bold">${totalPrice.toFixed(2)}</span>
           </div>
-          <Button className="w-full" onClick={onClose}>
-            Go to Checkout
-          </Button>
+          <Link to="/checkout">
+            <Button className="w-full" onClick={onClose}>
+              Go to Checkout
+            </Button>
+          </Link>
         </div>
       </SheetContent>
     </Sheet>
