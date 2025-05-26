@@ -1,9 +1,11 @@
 export type UserRole = "customer" | "administrator";
 
 export interface Account {
-  id: string | number;
+  id: number;
+  username: string;
+  phone: string;
   email: string;
-  role: UserRole;
+  role: string;
 }
 
 export interface Customer extends Account {

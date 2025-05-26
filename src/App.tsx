@@ -2,13 +2,24 @@ import { useEffect } from "react";
 import { Routes, Route } from "react-router-dom";
 import "./App.css";
 import Header from "./Header";
+
+// Pages
 import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 import CartPage from "./pages/CartPage";
 import ProfilePage from "./pages/ProfilePage";
 import ProductDetailPage from "./pages/ProductDetailPage";
+import DashboardPage from "./pages/DashboardPage";
+import CheckoutPage from "./pages/CheckoutPage";
+
+// Route Guards
+import AdminRoute from "./lib/AdminRoute";
+import CustomerRoute from "./lib/CustomerRoute";
+
+// Dummy product initializer
 import { initializeDummyProducts } from "@/services/productService";
+import { Toaster } from "sonner";
 
 function App() {
   useEffect(() => {
@@ -23,14 +34,49 @@ function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
-          <Route path="/cart" element={<CartPage />} />
-          <Route path="/profile" element={<ProfilePage />} />
+
+          {/* Customer-only routes */}
           <Route
-            path="/product/:productId"
-            element={<ProductDetailPage />}
-          />{" "}
+            path="/cart"
+            element={
+              <CustomerRoute>
+                <CartPage />
+              </CustomerRoute>
+            }
+          />
+          <Route
+            path="/profile"
+            element={
+              <CustomerRoute>
+                <ProfilePage />
+              </CustomerRoute>
+            }
+          />
+
+          <Route
+            path="/checkout"
+            element={
+              <CustomerRoute>
+                <CheckoutPage />
+              </CustomerRoute>
+            }
+          />
+
+          {/* Public product details */}
+          <Route path="/product/:productId" element={<ProductDetailPage />} />
+
+          {/* Admin-only route */}
+          <Route
+            path="/dashboard"
+            element={
+              <AdminRoute>
+                <DashboardPage />
+              </AdminRoute>
+            }
+          />
         </Routes>
       </main>
+      <Toaster position="bottom-right" />
     </>
   );
 }
