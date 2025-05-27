@@ -11,15 +11,15 @@ import CartPage from "./pages/CartPage";
 import ProfilePage from "./pages/ProfilePage";
 import ProductDetailPage from "./pages/ProductDetailPage";
 import DashboardPage from "./pages/DashboardPage";
-import AdminProductPage from "./pages/AdminProductPage";
+import CheckoutPage from "./pages/CheckoutPage";
 
 // Route Guards
 import AdminRoute from "./lib/AdminRoute";
 import CustomerRoute from "./lib/CustomerRoute";
-import UserRoute from "./lib/UserRoute";
 
-// Dummy data setup
+// Dummy product initializer
 import { initializeDummyProducts } from "@/services/productService";
+import { Toaster } from "sonner";
 
 function App() {
   useEffect(() => {
@@ -31,11 +31,9 @@ function App() {
       <Header />
       <main className="pt-4 pb-8">
         <Routes>
-          {/* Public Routes */}
           <Route path="/" element={<HomePage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
-          <Route path="/product/:productId" element={<ProductDetailPage />} />
 
           {/* Customer-only routes */}
           <Route
@@ -46,18 +44,28 @@ function App() {
               </CustomerRoute>
             }
           />
-
-          {/* Shared profile route (admin + customer) */}
           <Route
             path="/profile"
             element={
-              <UserRoute>        {/* ✅ allows any logged-in user */}
+              <CustomerRoute>
                 <ProfilePage />
-              </UserRoute>
+              </CustomerRoute>
             }
           />
 
-          {/* Admin-only routes */}
+          <Route
+            path="/checkout"
+            element={
+              <CustomerRoute>
+                <CheckoutPage />
+              </CustomerRoute>
+            }
+          />
+
+          {/* Public product details */}
+          <Route path="/product/:productId" element={<ProductDetailPage />} />
+
+          {/* Admin-only route */}
           <Route
             path="/dashboard"
             element={
@@ -66,16 +74,9 @@ function App() {
               </AdminRoute>
             }
           />
-          <Route
-            path="/adminProduct"
-            element={
-              <AdminRoute>
-                <AdminProductPage />
-              </AdminRoute>
-            }
-          />
         </Routes>
       </main>
+      <Toaster position="bottom-right" />
     </>
   );
 }
