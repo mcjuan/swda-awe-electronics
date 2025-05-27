@@ -34,9 +34,9 @@ const InvoicePage: React.FC = () => {
 
     // AWE Electronics header
     doc.setFontSize(18);
-    doc.setFont(undefined, "bold");
+    doc.setFont("times", "bold");
     doc.text("AWE Electronics", 14, 16);
-    doc.setFont(undefined, "normal");
+    doc.setFont("times", "normal");
     doc.setFontSize(10);
     doc.text("ABN: 12 345 678 910", 14, 26);
     doc.text("Hawthorn, Victoria", 14, 32);
@@ -44,9 +44,9 @@ const InvoicePage: React.FC = () => {
 
     // Bold "Invoice" heading
     doc.setFontSize(18);
-    doc.setFont(undefined, "bold");
+    doc.setFont("times", "bold");
     doc.text("Invoice", 14, 52);
-    doc.setFont(undefined, "normal");
+    doc.setFont("times", "normal");
 
     doc.setFontSize(11);
     doc.text(`Order placed: ${orderDateString}`, 14, 62);
@@ -61,19 +61,19 @@ const InvoicePage: React.FC = () => {
 
     let y = 110;
 
-    doc.setFont(undefined, "bold");
+    doc.setFont("times", "bold");
     doc.setFontSize(14);
     doc.text("Items:", 14, y);
-    doc.setFont(undefined, "normal");
+    doc.setFont("times", "normal");
     y += 10;
 
     // Table header
-    doc.setFont(undefined, "bold");
+    doc.setFont("times", "bold");
     doc.text("Product", 14, y);
     doc.text("Qty", 120, y, { align: "center" });
     doc.text("Price", 155, y, { align: "right" });
     doc.text("Total", 190, y, { align: "right" });
-    doc.setFont(undefined, "normal");
+    doc.setFont("times", "normal");
     y += 8;
 
     // Table rows
@@ -98,10 +98,10 @@ const InvoicePage: React.FC = () => {
 
     // Total row
     y += 2;
-    doc.setFont(undefined, "bold");
+    doc.setFont("times", "bold");
     doc.text("Total:", 155, y, { align: "right" });
     doc.text(`$${total.toFixed(2)}`, 190, y, { align: "right" });
-    doc.setFont(undefined, "normal");
+    doc.setFont("times", "normal");
 
     // Save the PDF
     doc.save("invoice.pdf");

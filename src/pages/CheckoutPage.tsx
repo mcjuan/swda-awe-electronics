@@ -79,12 +79,17 @@ const CheckoutPage: React.FC = () => {
       return;
     }
     // Prepare order data
+    const now = new Date();
+    let tracking_info = {
+      [now.toLocaleString("en-AU")]: "Order placed",
+    };
     const order: Order = {
       order_items: cartItems,
+      tracking_info: tracking_info,
       total: totalPrice,
       user_id: currentUser.id,
       payment: {
-        cardNumber: "4111 1111 1111 1111", // TODO: Replace with real form fields
+        cardNumber: "4111 1111 1111 1111",
         expiry: "12/30",
         cvc: "123",
         name: form.name,
@@ -98,7 +103,7 @@ const CheckoutPage: React.FC = () => {
       },
     };
     try {
-      // await placeOrder(order);
+      await placeOrder(order);
       toast.success("Order placed successfully!");
       clearCart();
       navigate("/invoice", {

@@ -4,9 +4,11 @@ import sqlite3 from "sqlite3";
 import path from "path";
 import { fileURLToPath } from "url";
 import UserModel from "./models/UserModel.js";
-import Authentication from "./controllers/AuthController.js";
+import AuthController from "./controllers/AuthController.js";
 import Product from "./models/Product.js";
 import ProductController from "./controllers/ProductController.js";
+import OrderController from "./controllers/OrderController.js";
+import Order from "./models/Order.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -35,12 +37,13 @@ app.use(
 );
 app.use(express.json());
 
-// Inject Model → Controller
+// Initialize Controllers
 const userModel = new UserModel(db);
-const auth = new Authentication(userModel);
-// Initialize Product model and controller
+const auth = new AuthController(userModel);
 const productModel = new Product(db);
 const productController = new ProductController(productModel);
+const orderModel = new Order(db);
+const orderController = new OrderController(orderModel);
 
 // Auth Routes
 app.post("/api/register", auth.register);
@@ -48,6 +51,9 @@ app.post("/api/login", auth.login);
 
 // Product Routes
 app.get("/api/products", productController.getAllProducts);
+
+// Order Routes
+app.post("/api/createOrder", orderController.createOrder);
 
 // Start Server
 app.listen(PORT, () => {

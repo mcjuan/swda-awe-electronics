@@ -1,7 +1,7 @@
 import Customer from "../models/Customer.js";
 import Administrator from "../models/Administrator.js";
 
-class Authentication {
+class AuthController {
   constructor(userModel) {
     this.userModel = userModel;
   }
@@ -11,14 +11,11 @@ class Authentication {
 
     const phoneRegex = /^04\d{8}$/;
     if (!phoneRegex.test(phone)) {
-      return res
-        .status(400)
-        .json({
-          success: false,
-          message:
-            "Invalid phone number format. It must be in the form 04xxxxxxxx.",
-        });
-
+      return res.status(400).json({
+        success: false,
+        message:
+          "Invalid phone number format. It must be in the form 04xxxxxxxx.",
+      });
     }
 
     this.userModel.findByUsernameOrEmail(
@@ -102,4 +99,4 @@ class Authentication {
   };
 }
 
-export default Authentication;
+export default AuthController;
