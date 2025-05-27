@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useCart } from "@/context/CartContext";
+// Update the import path below to the correct location of fetchProducts
 import { fetchProducts } from "@/services/productService";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";

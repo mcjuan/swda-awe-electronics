@@ -1,4 +1,4 @@
-import { User, ShoppingCart, Home, LogOut, UserPlus } from "lucide-react";
+import { User, ShoppingCart, Home, LogOut } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
 import { Button } from "@/components/ui/button";
@@ -8,12 +8,13 @@ import { useState } from "react";
 
 function Header() {
   const { currentUser, logout, isLoading } = useAuth();
-  const { cartItems } = useCart();
+  const { cartItems, clearCart } = useCart();
   const [isCartOpen, setIsCartOpen] = useState(false);
   const navigate = useNavigate();
 
   const handleLogout = async () => {
     await logout();
+    clearCart();
     navigate("/login");
   };
 
@@ -104,14 +105,14 @@ function Header() {
                 <User size={18} />
                 <span className="hidden sm:ml-1 sm:inline">Login</span>
               </Link>
-              <Link
+              {/* <Link
                 to="/register"
                 className="text-gray-600 hover:text-blue-600 transition-colors px-2 py-2 sm:px-3 rounded-md text-sm font-medium flex items-center"
                 title="Register"
               >
                 <UserPlus size={18} />
                 <span className="hidden sm:ml-1 sm:inline">Register</span>
-              </Link>
+              </Link> */}
             </>
           )}
         </nav>

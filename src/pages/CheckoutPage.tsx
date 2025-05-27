@@ -6,11 +6,15 @@ import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import type { Product } from "@/types/product";
+import { useNavigate } from "react-router-dom";
+import { placeOrder } from "@/services/orderService";
+import type { Order } from "@/types/order";
+import { toast } from "sonner";
 
 const AU_STATES = ["ACT", "NSW", "NT", "QLD", "SA", "TAS", "VIC", "WA"];
 
 const CheckoutPage: React.FC = () => {
-  const { cartItems } = useCart();
+  const { cartItems, clearCart } = useCart();
   const { currentUser } = useAuth();
   const [products, setProducts] = useState<Product[]>([]);
   const [form, setForm] = useState({
@@ -23,6 +27,7 @@ const CheckoutPage: React.FC = () => {
     state: "",
     postcode: "",
   });
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchProducts().then(setProducts);
@@ -59,15 +64,58 @@ const CheckoutPage: React.FC = () => {
   };
 
   const handlePostcodeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    // Only allow 4 numeric characters
     const value = e.target.value.replace(/\D/g, "").slice(0, 4);
     setForm({ ...form, postcode: value });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Mock submit logic
-    alert("Order placed! (mock)");
+    if (!currentUser) {
+      toast.error("You must be logged in to place an order.");
+      return;
+    }
+    if (cartItems.length === 0) {
+      toast.error("Your cart is empty.");
+      return;
+    }
+    // Prepare order data
+    const now = new Date();
+    let tracking_info = {
+      [now.toLocaleString("en-AU")]: "Order placed",
+    };
+    const order: Order = {
+      order_items: cartItems,
+      tracking_info: tracking_info,
+      total: totalPrice,
+      user_id: currentUser.id,
+      payment: {
+        cardNumber: "4111 1111 1111 1111",
+        expiry: "12/30",
+        cvc: "123",
+        name: form.name,
+        billingAddress: {
+          address1: form.address1,
+          address2: form.address2,
+          city: form.city,
+          state: form.state,
+          postcode: form.postcode,
+        },
+      },
+    };
+    try {
+      await placeOrder(order);
+      toast.success("Order placed successfully!");
+      clearCart();
+      navigate("/invoice", {
+        state: {
+          form,
+          cart: cartDetails,
+          total: totalPrice,
+        },
+      });
+    } catch (error) {
+      toast.error("Failed to place order. Please try again.");
+    }
   };
 
   return (
