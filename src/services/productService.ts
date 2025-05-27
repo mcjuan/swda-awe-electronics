@@ -1,13 +1,15 @@
 import type { Product } from "@/types/product";
 
-const API_URL = "http://localhost:3001/api/products";
+// const API_URL = "http://localhost:3001/api/products";
 
 const initialDummyProducts: Product[] = [];
 
 const dummyProducts: Product[] = [];
 
 export const fetchProducts = async (): Promise<Product[]> => {
-  const response = await fetch(API_URL);
+  const response = await fetch(
+    `${import.meta.env.VITE_API_BASE_URL}/api/products`
+  );
   if (!response.ok) {
     const errorData = await response.json().catch(() => ({}));
     throw new Error(errorData.message || "Failed to fetch products");
