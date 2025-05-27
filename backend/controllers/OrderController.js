@@ -1,6 +1,3 @@
-import sqlite3 from "sqlite3";
-import Order from "../models/Order.js";
-
 class OrderController {
   constructor(orderModel) {
     this.orderModel = orderModel;

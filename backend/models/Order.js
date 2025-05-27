@@ -1,5 +1,3 @@
-import sqlite3 from "sqlite3";
-
 class Order {
   constructor(db) {
     this.db = db;
