@@ -1,4 +1,4 @@
-import { User, ShoppingCart, Home, LogOut, UserPlus } from "lucide-react";
+import { User, ShoppingCart, Home, LogOut } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
 import { Button } from "@/components/ui/button";
@@ -8,12 +8,13 @@ import { useState } from "react";
 
 function Header() {
   const { currentUser, logout, isLoading } = useAuth();
-  const { cartItems } = useCart();
+  const { cartItems, clearCart } = useCart();
   const [isCartOpen, setIsCartOpen] = useState(false);
   const navigate = useNavigate();
 
   const handleLogout = async () => {
     await logout();
+    clearCart();
     navigate("/login");
   };
 
