@@ -7,6 +7,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import type { Product } from "@/types/product";
 import { useNavigate } from "react-router-dom";
+import { placeOrder } from "@/services/orderService";
+import type { Order } from "@/types/order";
+import { toast } from "sonner";
 
 const AU_STATES = ["ACT", "NSW", "NT", "QLD", "SA", "TAS", "VIC", "WA"];
 
@@ -65,16 +68,49 @@ const CheckoutPage: React.FC = () => {
     setForm({ ...form, postcode: value });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    clearCart();
-    navigate("/invoice", {
-      state: {
-        form,
-        cart: cartDetails,
-        total: totalPrice,
+    if (!currentUser) {
+      toast.error("You must be logged in to place an order.");
+      return;
+    }
+    if (cartItems.length === 0) {
+      toast.error("Your cart is empty.");
+      return;
+    }
+    // Prepare order data
+    const order: Order = {
+      order_items: cartItems,
+      total: totalPrice,
+      user_id: currentUser.id,
+      payment: {
+        cardNumber: "4111 1111 1111 1111", // TODO: Replace with real form fields
+        expiry: "12/30",
+        cvc: "123",
+        name: form.name,
+        billingAddress: {
+          address1: form.address1,
+          address2: form.address2,
+          city: form.city,
+          state: form.state,
+          postcode: form.postcode,
+        },
       },
-    });
+    };
+    try {
+      // await placeOrder(order);
+      toast.success("Order placed successfully!");
+      clearCart();
+      navigate("/invoice", {
+        state: {
+          form,
+          cart: cartDetails,
+          total: totalPrice,
+        },
+      });
+    } catch (error) {
+      toast.error("Failed to place order. Please try again.");
+    }
   };
 
   return (
