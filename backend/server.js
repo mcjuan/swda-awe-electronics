@@ -54,6 +54,7 @@ app.get("/api/products", productController.getAllProducts);
 
 // Order Routes
 app.post("/api/createOrder", orderController.createOrder);
+app.post("/api/orderHistory", orderController.getOrdersByUserId);
 
 // Start Server
 app.listen(PORT, () => {
