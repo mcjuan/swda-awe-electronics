@@ -98,7 +98,9 @@ const ProfilePage = () => {
                         <div className="text-sm">
                           Placed:{" "}
                           {order.created_at
-                            ? new Date(order.created_at).toLocaleString("en-AU")
+                            ? new Date(
+                                order.created_at.replace(" ", "T") + "Z"
+                              ).toLocaleString()
                             : "N/A"}
                         </div>
                         <div className="text-sm">

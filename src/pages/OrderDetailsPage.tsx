@@ -57,7 +57,9 @@ const OrderDetailsPage: React.FC = () => {
             <div>
               <span className="font-semibold">Placed:</span>{" "}
               {order.created_at
-                ? new Date(order.created_at).toLocaleString("en-AU")
+                ? new Date(
+                    order.created_at.replace(" ", "T") + "Z"
+                  ).toLocaleString()
                 : "-"}
             </div>
             <div>
