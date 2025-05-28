@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import type { Order } from "@/types/order";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { downloadInvoicePDF } from "@/services/invoiceService";
 
 const OrderDetailsPage: React.FC = () => {
   const { orderId } = useParams<{ orderId: string }>();
@@ -46,6 +47,34 @@ const OrderDetailsPage: React.FC = () => {
     ([t1], [t2]) => new Date(t1).getTime() - new Date(t2).getTime()
   );
 
+  // Prepare customer info if available
+  const customer =
+    order.payment && order.payment.billingAddress
+      ? {
+          name: order.payment.name,
+          address1: order.payment.billingAddress.address1,
+          address2: order.payment.billingAddress.address2,
+          city: order.payment.billingAddress.city,
+          state: order.payment.billingAddress.state,
+          postcode: order.payment.billingAddress.postcode,
+        }
+      : undefined;
+
+  // Format order placed date in local timezone
+  const orderDateString = order.created_at
+    ? new Date(order.created_at.replace(" ", "T") + "Z").toLocaleString()
+    : "-";
+
+  const handleDownloadPDF = () => {
+    downloadInvoicePDF({
+      orderId: order.id,
+      orderDate: orderDateString,
+      customer,
+      items: order.order_items,
+      total: order.total,
+    });
+  };
+
   return (
     <div className="flex flex-col items-center p-6 space-y-6 text-black">
       <div className="w-full max-w-3xl space-y-6">
@@ -55,12 +84,7 @@ const OrderDetailsPage: React.FC = () => {
           </CardHeader>
           <CardContent className="space-y-4">
             <div>
-              <span className="font-semibold">Placed:</span>{" "}
-              {order.created_at
-                ? new Date(
-                    order.created_at.replace(" ", "T") + "Z"
-                  ).toLocaleString()
-                : "-"}
+              <span className="font-semibold">Placed:</span> {orderDateString}
             </div>
             <div>
               <span className="font-semibold">Total:</span> $
@@ -106,9 +130,16 @@ const OrderDetailsPage: React.FC = () => {
             ))}
           </CardContent>
         </Card>
-        <Button variant="outline" onClick={() => navigate(-1)}>
-          Back to Profile
-        </Button>
+        <div className="flex flex-col sm:flex-row">
+          <div className="flex-1">
+            <Button variant="outline" onClick={() => navigate(-1)}>
+              Back to Profile
+            </Button>
+          </div>
+          <div className="flex-1 flex justify-end">
+            <Button onClick={handleDownloadPDF}>Download Invoice</Button>
+          </div>
+        </div>
       </div>
     </div>
   );
