@@ -16,3 +16,16 @@ export async function placeOrder(order: Order) {
   }
   return await response.json();
 }
+
+export async function fetchOrderHistory(user_id: number) {
+  const response = await fetch(
+    `${import.meta.env.VITE_API_BASE_URL}/api/orderHistory`,
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ user_id }),
+    }
+  );
+  if (!response.ok) throw new Error("Failed to fetch order history");
+  return await response.json();
+}
