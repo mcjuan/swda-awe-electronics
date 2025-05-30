@@ -1,18 +1,19 @@
 import React, { useState } from "react";
-import { useLocation, Navigate } from "react-router-dom";
+import { useLocation, Navigate, useNavigate } from "react-router-dom";
 import type { Product } from "@/types/product";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useCart } from "@/context/CartContext";
 import { toast } from "sonner";
+import { ArrowLeft } from "lucide-react"; // <-- Import Lucide icon
 
 const ProductDetailPage: React.FC = () => {
   const location = useLocation();
   const product = location.state?.product as Product;
   const { addToCart } = useCart();
   const [quantity, setQuantity] = useState(1);
+  const navigate = useNavigate();
 
-  // If no product data is passed, redirect to the home page
   if (!product) {
     return <Navigate to="/" replace />;
   }
@@ -35,8 +36,31 @@ const ProductDetailPage: React.FC = () => {
 
   return (
     <div className="container mx-auto p-4 md:p-8">
+      <div className="mb-4">
+        <Button
+          variant="ghost"
+          className="flex items-center gap-4 text-gray-700 hover:text-gray-900 px-4 py-4"
+          style={{ fontSize: "2rem", height: "2.5rem", width: "2.5rem" }}
+          onClick={() => navigate("/")}
+        >
+          <ArrowLeft
+            style={{
+              width: "2rem",
+              height: "2rem",
+              minWidth: "2rem",
+              minHeight: "2rem",
+              maxWidth: "2rem",
+              maxHeight: "2rem",
+              display: "inline-block",
+              verticalAlign: "middle",
+            }}
+            className=""
+          />
+          <span className="sr-only">Back to home</span>
+        </Button>
+      </div>
+      <div className="grid md:grid-cols-2 gap-8 lg:gap-12 items-start"></div>
       <div className="grid md:grid-cols-2 gap-8 lg:gap-12 items-start">
-        {/* Image Section */}
         <div className="aspect-w-1 aspect-h-1 w-full overflow-hidden rounded-lg bg-gray-200">
           {product.image_url ? (
             <img
@@ -57,7 +81,6 @@ const ProductDetailPage: React.FC = () => {
           )}
         </div>
 
-        {/* Details Section */}
         <div>
           <h1 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-3">
             {product.name}
@@ -84,7 +107,6 @@ const ProductDetailPage: React.FC = () => {
             {product.stock})
           </p>
 
-          {/* Quantity input and Add to Cart button */}
           <div className="flex items-center gap-3 mb-2">
             <Input
               type="number"
