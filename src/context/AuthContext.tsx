@@ -6,6 +6,7 @@ import {
   loginUser as apiLogin,
   registerUser as apiRegister,
   logoutUser as apiLogout,
+  getCurrentUser,
 } from "@/services/authService";
 
 interface AuthContextType {
@@ -22,18 +23,28 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [currentUser, setCurrentUser] = useState<Account | null>(() => {
-    const storedUser = localStorage.getItem("currentUser");
-    try {
-      return storedUser ? JSON.parse(storedUser) : null;
-    } catch (error) {
-      localStorage.removeItem("currentUser");
-      return null;
-    }
-  });
+export const AuthProvider: React.FC<{ children: ReactNode }> = ({
+  children,
+}) => {
+  const [currentUser, setCurrentUser] = useState<Account | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  // On mount, check backend session
+  useEffect(() => {
+    const checkSession = async () => {
+      setIsLoading(true);
+      const response = await getCurrentUser(); // Use the new function
+      if (response.success && response.user) {
+        setCurrentUser(response.user);
+        localStorage.setItem("currentUser", JSON.stringify(response.user));
+      } else {
+        setCurrentUser(null);
+        localStorage.removeItem("currentUser");
+      }
+      setIsLoading(false);
+    };
+    checkSession();
+  }, []);
 
   useEffect(() => {
     if (currentUser) {

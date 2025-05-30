@@ -29,17 +29,9 @@ class OrderController {
   };
 
   getOrdersByUserId = async (req, res) => {
-    const { user_id } = req.body;
-    if (!user_id) {
-      return res.status(400).json({
-        success: false,
-        message: "user_id is required in the request body.",
-      });
-    }
-
+    const user_id = req.session.user.id; // Use session user ID
     try {
-      const uid = Number(user_id);
-      const orders = await this.orderModel.getOrdersByUserId(uid);
+      const orders = await this.orderModel.getOrdersByUserId(user_id);
       return res.status(200).json({
         success: true,
         orders,
@@ -49,6 +41,22 @@ class OrderController {
       return res.status(500).json({
         success: false,
         message: "Database error fetching orders.",
+      });
+    }
+  };
+
+  getAllOrders = async (req, res) => {
+    try {
+      const orders = await this.orderModel.getAllOrders();
+      return res.status(200).json({
+        success: true,
+        orders,
+      });
+    } catch (err) {
+      console.error("Order fetch error:", err.message);
+      return res.status(500).json({
+        success: false,
+        message: "Database error fetching all orders.",
       });
     }
   };

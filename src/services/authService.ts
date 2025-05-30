@@ -11,7 +11,6 @@ export interface RegistrationData {
   role: string;
 }
 
-// --- Register a new user ---
 export const registerUser = async (
   data: RegistrationData
 ): Promise<{ success: boolean; message: string }> => {
@@ -32,7 +31,6 @@ export const registerUser = async (
   }
 };
 
-// --- Login a user ---
 export const loginUser = async (
   credentials: AuthCredentials
 ): Promise<{ success: boolean; message: string; user?: any }> => {
@@ -42,6 +40,7 @@ export const loginUser = async (
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        credentials: "include",
         body: JSON.stringify(credentials),
       }
     );
@@ -53,8 +52,30 @@ export const loginUser = async (
   }
 };
 
-// --- Logout (stub) ---
 export const logoutUser = async (): Promise<void> => {
-  // Stub for future use
+  await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/logout`, {
+    method: "POST",
+    credentials: "include",
+  });
+  localStorage.removeItem("currentUser");
+  sessionStorage.removeItem("user_orders");
   return Promise.resolve();
+};
+
+export const getCurrentUser = async (): Promise<{
+  success: boolean;
+  user?: any;
+}> => {
+  try {
+    const response = await fetch(
+      `${import.meta.env.VITE_API_BASE_URL}/api/me`,
+      {
+        credentials: "include",
+      }
+    );
+    const result = await response.json();
+    return result;
+  } catch (error) {
+    return { success: false };
+  }
 };

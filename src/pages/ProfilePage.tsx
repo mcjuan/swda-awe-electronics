@@ -46,7 +46,7 @@ const ProfilePage = () => {
 
   return (
     <div className="flex flex-col items-center p-6 space-y-6 text-black">
-      <div className="w-full max-w-3xl space-y-6">
+      <div className="w-full max-w-5xl space-y-6">
         {/* Customer Info */}
         <Card>
           <CardHeader>
@@ -90,7 +90,7 @@ const ProfilePage = () => {
                 {orders.map((order) => (
                   <Card
                     key={order.id}
-                    className="cursor-pointer w-full max-w-3xl mx-auto"
+                    className="cursor-pointer w-full max-w-5xl mx-auto"
                   >
                     <CardContent className="flex items-center justify-between">
                       <div>
