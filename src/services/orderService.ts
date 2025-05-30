@@ -5,6 +5,7 @@ export async function placeOrder(order: Order) {
     `${import.meta.env.VITE_API_BASE_URL}/api/createOrder`,
     {
       method: "POST",
+      credentials: "include",
       headers: {
         "Content-Type": "application/json",
       },
@@ -22,6 +23,7 @@ export async function fetchOrderHistory(user_id: number) {
     `${import.meta.env.VITE_API_BASE_URL}/api/orderHistory`,
     {
       method: "POST",
+      credentials: "include",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ user_id }),
     }
