@@ -27,26 +27,25 @@ function Header() {
         >
           AWE Electronics
         </Link>
-        <nav className="flex items-center space-x-2 sm:space-x-4">
+        <nav className="flex items-center gap-2 sm:gap-4">
           <Link
             to="/"
-            className="text-gray-600 hover:text-blue-600 transition-colors px-2 py-2 sm:px-3 rounded-md text-sm font-medium flex items-center"
+            className="flex items-center gap-2 text-gray-600 hover:text-blue-600 transition-colors px-3 py-2 rounded-md text-sm font-medium"
             title="Home"
           >
-            <Home size={18} />
-            <span className="hidden sm:ml-1 sm:inline">Home</span>
+            <Home size={20} />
+            <span className="hidden sm:inline">Home</span>
           </Link>
 
-          {/* Cart button for non-admins */}
           {currentUser?.role !== "administrator" && (
             <>
               <button
                 onClick={() => setIsCartOpen(true)}
-                className="text-gray-600 hover:text-blue-600 transition-colors px-2 py-2 sm:px-3 rounded-md text-sm font-medium flex items-center"
+                className="flex items-center gap-2 text-gray-600 hover:text-blue-600 transition-colors px-3 py-2 rounded-md text-sm font-medium"
                 title="Cart"
               >
-                <ShoppingCart size={18} />
-                <span className="hidden sm:ml-1 sm:inline">Cart</span>
+                <ShoppingCart size={20} />
+                <span className="hidden sm:inline">Cart</span>
                 {cartItems.length > 0 && (
                   <span className="ml-1 text-xs font-bold text-white bg-red-500 rounded-full px-2 py-0.5">
                     {cartItems.length}
@@ -65,20 +64,20 @@ function Header() {
               {currentUser.role === "administrator" ? (
                 <Link
                   to="/dashboard"
-                  className="text-gray-600 hover:text-blue-600 transition-colors px-2 py-2 sm:px-3 rounded-md text-sm font-medium flex items-center"
+                  className="flex items-center gap-2 text-gray-600 hover:text-blue-600 transition-colors px-3 py-2 rounded-md text-sm font-medium"
                   title="Dashboard"
                 >
-                  <User size={18} />
-                  <span className="hidden sm:ml-1 sm:inline">Dashboard</span>
+                  <User size={20} />
+                  <span className="hidden sm:inline">Dashboard</span>
                 </Link>
               ) : (
                 <Link
                   to="/profile"
-                  className="text-gray-600 hover:text-blue-600 transition-colors px-2 py-2 sm:px-3 rounded-md text-sm font-medium flex items-center"
+                  className="flex items-center gap-2 text-gray-600 hover:text-blue-600 transition-colors px-3 py-2 rounded-md text-sm font-medium"
                   title="Profile"
                 >
-                  <User size={18} />
-                  <span className="hidden sm:ml-1 sm:inline">Profile</span>
+                  <User size={20} />
+                  <span className="hidden sm:inline">Profile</span>
                 </Link>
               )}
               <Button
@@ -86,11 +85,11 @@ function Header() {
                 size="sm"
                 onClick={handleLogout}
                 disabled={isLoading}
-                className="text-gray-600 hover:text-blue-600 flex items-center px-2 py-2 sm:px-3"
+                className="flex items-center gap-2 text-gray-600 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium"
                 title="Logout"
               >
-                <LogOut size={18} />
-                <span className="hidden sm:ml-1 sm:inline">
+                <LogOut size={20} />
+                <span className="hidden sm:inline">
                   {isLoading ? "..." : "Logout"}
                 </span>
               </Button>
@@ -99,20 +98,12 @@ function Header() {
             <>
               <Link
                 to="/login"
-                className="text-gray-600 hover:text-blue-600 transition-colors px-2 py-2 sm:px-3 rounded-md text-sm font-medium flex items-center"
+                className="flex items-center gap-2 text-gray-600 hover:text-blue-600 transition-colors px-3 py-2 rounded-md text-sm font-medium"
                 title="Login"
               >
-                <User size={18} />
-                <span className="hidden sm:ml-1 sm:inline">Login</span>
+                <User size={20} />
+                <span className="hidden sm:inline">Login</span>
               </Link>
-              {/* <Link
-                to="/register"
-                className="text-gray-600 hover:text-blue-600 transition-colors px-2 py-2 sm:px-3 rounded-md text-sm font-medium flex items-center"
-                title="Register"
-              >
-                <UserPlus size={18} />
-                <span className="hidden sm:ml-1 sm:inline">Register</span>
-              </Link> */}
             </>
           )}
         </nav>

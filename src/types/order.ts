@@ -1,8 +1,8 @@
-import type { CartItem } from "./cartItem";
+import type { OrderItem } from "./orderItem";
 
 export interface Order {
   id?: number;
-  order_items: CartItem[];
+  order_items: OrderItem[];
   tracking_info?: Record<string, string>;
   total: number;
   user_id: number;

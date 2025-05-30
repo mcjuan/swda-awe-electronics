@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import type { Product } from "@/types/product";
 import { useNavigate } from "react-router-dom";
 import { placeOrder } from "@/services/orderService";
+import type { OrderItem } from "@/types/orderItem";
 import type { Order } from "@/types/order";
 import { toast } from "sonner";
 
@@ -83,8 +84,17 @@ const CheckoutPage: React.FC = () => {
     let tracking_info = {
       [now.toLocaleString("en-AU")]: "Order placed",
     };
+
+    const orderItems: OrderItem[] = cartDetails.map((item) => ({
+      id: item.id,
+      name: item.name,
+      price: item.price,
+      quantity: item.quantity,
+      image_url: item.image_url,
+    }));
+
     const order: Order = {
-      order_items: cartItems,
+      order_items: orderItems,
       tracking_info: tracking_info,
       total: totalPrice,
       user_id: currentUser.id,

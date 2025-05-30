@@ -24,6 +24,43 @@ class Order {
       );
     });
   }
+  // Fetch all orders for a given user_id
+  getOrdersByUserId(user_id) {
+    return new Promise((resolve, reject) => {
+      const query = `SELECT * FROM "Order" WHERE user_id = ? ORDER BY id DESC`;
+      this.db.all(query, [user_id], (err, rows) => {
+        if (err) {
+          return reject(err);
+        }
+        // Parse JSON fields before returning
+        const orders = rows.map((order) => ({
+          ...order,
+          order_items: JSON.parse(order.order_items),
+          tracking_info: JSON.parse(order.tracking_info),
+          payment: JSON.parse(order.payment),
+        }));
+        resolve(orders);
+      });
+    });
+  }
+  // Fetch all orders (admin only)
+  getAllOrders() {
+    return new Promise((resolve, reject) => {
+      const query = `SELECT * FROM "Order" ORDER BY id DESC`;
+      this.db.all(query, [], (err, rows) => {
+        if (err) {
+          return reject(err);
+        }
+        const orders = rows.map((order) => ({
+          ...order,
+          order_items: JSON.parse(order.order_items),
+          tracking_info: JSON.parse(order.tracking_info),
+          payment: JSON.parse(order.payment),
+        }));
+        resolve(orders);
+      });
+    });
+  }
 }
 
 export default Order;

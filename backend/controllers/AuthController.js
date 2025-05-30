@@ -90,10 +90,33 @@ class AuthController {
         );
       }
 
+      req.session.user = {
+        id: userRow.id,
+        username: userRow.username,
+        email: userRow.email,
+        role: userRow.role,
+        phone: userRow.phone,
+      };
+
       return res.json({
         success: true,
         message: "Login successful.",
         user: user.getBasicInfo(),
+      });
+    });
+  };
+  logout = (req, res) => {
+    req.session.destroy((err) => {
+      if (err) {
+        return res.status(500).json({
+          success: false,
+          message: "Logout failed.",
+        });
+      }
+      res.clearCookie("connect.sid");
+      return res.json({
+        success: true,
+        message: "Logged out successfully.",
       });
     });
   };

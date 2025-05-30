@@ -13,6 +13,7 @@ import ProductDetailPage from "./pages/ProductDetailPage";
 import DashboardPage from "./pages/DashboardPage";
 import CheckoutPage from "./pages/CheckoutPage";
 import InvoicePage from "./pages/InvoicePage";
+import OrderDetailsPage from "./pages/OrderDetailsPage";
 
 // Route Guards
 import AdminRoute from "./lib/AdminRoute";
@@ -71,6 +72,9 @@ function App() {
               </CustomerRoute>
             }
           />
+
+          <Route path="/order/:orderId" element={<OrderDetailsPage />} />
+
           {/* Public product details */}
           <Route path="/product/:productId" element={<ProductDetailPage />} />
 

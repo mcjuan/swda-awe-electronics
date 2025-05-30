@@ -1,7 +1,7 @@
 import React, { useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { jsPDF } from "jspdf";
+import { downloadInvoicePDF } from "@/services/invoiceService";
 
 const InvoicePage: React.FC = () => {
   const location = useLocation();
@@ -9,7 +9,7 @@ const InvoicePage: React.FC = () => {
   const invoiceRef = useRef<HTMLDivElement>(null);
 
   // Get order data from navigation state
-  const { form, cart, total } = location.state || {};
+  const { form, cart, total, order } = location.state || {};
 
   if (!form || !cart) {
     navigate("/", { replace: true });
@@ -27,84 +27,22 @@ const InvoicePage: React.FC = () => {
   });
 
   const handleDownloadPDF = () => {
-    const doc = new jsPDF();
-
-    // Set Times New Roman font
-    doc.setFont("times", "normal");
-
-    // AWE Electronics header
-    doc.setFontSize(18);
-    doc.setFont("times", "bold");
-    doc.text("AWE Electronics", 14, 16);
-    doc.setFont("times", "normal");
-    doc.setFontSize(10);
-    doc.text("ABN: 12 345 678 910", 14, 26);
-    doc.text("Hawthorn, Victoria", 14, 32);
-    doc.text("support@awe-electronics.com.au", 14, 38);
-
-    // Bold "Invoice" heading
-    doc.setFontSize(18);
-    doc.setFont("times", "bold");
-    doc.text("Invoice", 14, 52);
-    doc.setFont("times", "normal");
-
-    doc.setFontSize(11);
-    doc.text(`Order placed: ${orderDateString}`, 14, 62);
-    doc.text(`Name: ${form.name}`, 14, 70);
-    doc.text(`Email: ${form.email}`, 14, 78);
-    doc.text(`Phone: ${form.phone}`, 14, 86);
-    doc.text(
-      `Address: ${form.address1} ${form.address2}, ${form.city}, ${form.state} ${form.postcode}`,
-      14,
-      94
-    );
-
-    let y = 110;
-
-    doc.setFont("times", "bold");
-    doc.setFontSize(14);
-    doc.text("Items:", 14, y);
-    doc.setFont("times", "normal");
-    y += 10;
-
-    // Table header
-    doc.setFont("times", "bold");
-    doc.text("Product", 14, y);
-    doc.text("Qty", 120, y, { align: "center" });
-    doc.text("Price", 155, y, { align: "right" });
-    doc.text("Total", 190, y, { align: "right" });
-    doc.setFont("times", "normal");
-    y += 8;
-
-    // Table rows
-    doc.setFontSize(11);
-
-    cart.forEach((item: any) => {
-      const productLines = doc.splitTextToSize(String(item.name), 100);
-      let lineY = y;
-      productLines.forEach((line: string, idx: number) => {
-        doc.text(line, 14, lineY);
-        if (idx === 0) {
-          doc.text(String(item.quantity), 120, lineY, { align: "center" });
-          doc.text(`$${item.price.toFixed(2)}`, 155, lineY, { align: "right" });
-          doc.text(`$${(item.price * item.quantity).toFixed(2)}`, 190, lineY, {
-            align: "right",
-          });
-        }
-        lineY += 6;
-      });
-      y = lineY + 5;
+    downloadInvoicePDF({
+      orderId: order?.id, // optional
+      orderDate: orderDateString,
+      customer: {
+        name: form.name,
+        email: form.email,
+        phone: form.phone,
+        address1: form.address1,
+        address2: form.address2,
+        city: form.city,
+        state: form.state,
+        postcode: form.postcode,
+      },
+      items: cart,
+      total: total,
     });
-
-    // Total row
-    y += 2;
-    doc.setFont("times", "bold");
-    doc.text("Total:", 155, y, { align: "right" });
-    doc.text(`$${total.toFixed(2)}`, 190, y, { align: "right" });
-    doc.setFont("times", "normal");
-
-    // Save the PDF
-    doc.save("invoice.pdf");
   };
 
   return (
