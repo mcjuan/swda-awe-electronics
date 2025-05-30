@@ -52,6 +52,22 @@ class OrderController {
       });
     }
   };
+
+  getAllOrders = async (req, res) => {
+    try {
+      const orders = await this.orderModel.getAllOrders();
+      return res.status(200).json({
+        success: true,
+        orders,
+      });
+    } catch (err) {
+      console.error("Order fetch error:", err.message);
+      return res.status(500).json({
+        success: false,
+        message: "Database error fetching all orders.",
+      });
+    }
+  };
 }
 
 export default OrderController;

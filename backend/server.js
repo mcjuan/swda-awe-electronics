@@ -10,12 +10,26 @@ import ProductController from "./controllers/ProductController.js";
 import OrderController from "./controllers/OrderController.js";
 import Order from "./models/Order.js";
 
+import { requireAdmin } from "./middleware/requireAdmin.js";
+import session from "express-session";
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const app = express();
 const PORT = 3001;
 
+app.use(
+  session({
+    secret: "some_secret_key",
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      secure: false,
+      maxAge: 1000 * 60 * 60 * 24 * 14, // 14 days
+    },
+  })
+);
 // Connect to SQLite database
 const db = new sqlite3.Database(
   path.resolve(__dirname, "../awe-database.db"),
@@ -55,6 +69,7 @@ app.get("/api/products", productController.getAllProducts);
 // Order Routes
 app.post("/api/createOrder", orderController.createOrder);
 app.post("/api/orderHistory", orderController.getOrdersByUserId);
+app.post("/api/orderAll", requireAdmin, orderController.getAllOrders);
 
 // Start Server
 app.listen(PORT, () => {

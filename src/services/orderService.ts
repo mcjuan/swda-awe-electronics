@@ -29,3 +29,16 @@ export async function fetchOrderHistory(user_id: number) {
   if (!response.ok) throw new Error("Failed to fetch order history");
   return await response.json();
 }
+
+export async function fetchAllOrders() {
+  const response = await fetch(
+    `${import.meta.env.VITE_API_BASE_URL}/api/orderAll`,
+    {
+      method: "POST",
+      credentials: "include",
+      headers: { "Content-Type": "application/json" },
+    }
+  );
+  if (!response.ok) throw new Error("Failed to fetch all orders");
+  return await response.json();
+}

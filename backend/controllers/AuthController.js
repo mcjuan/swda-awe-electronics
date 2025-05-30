@@ -90,6 +90,14 @@ class AuthController {
         );
       }
 
+      req.session.user = {
+        id: userRow.id,
+        username: userRow.username,
+        email: userRow.email,
+        role: userRow.role,
+        phone: userRow.phone,
+      };
+
       return res.json({
         success: true,
         message: "Login successful.",
