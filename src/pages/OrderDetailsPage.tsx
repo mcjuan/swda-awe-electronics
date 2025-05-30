@@ -4,12 +4,23 @@ import type { Order } from "@/types/order";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { downloadInvoicePDF } from "@/services/invoiceService";
+import { useAuth } from "@/context/AuthContext";
 
 const OrderDetailsPage: React.FC = () => {
   const { orderId } = useParams<{ orderId: string }>();
   const location = useLocation();
   const navigate = useNavigate();
   const [order, setOrder] = useState<Order | null>(null);
+  const { currentUser } = useAuth();
+
+  if (!currentUser) {
+    return (
+      <div className="p-6 text-black">
+        <h1 className="text-2xl font-bold mb-4">Order Details</h1>
+        <p>You must be logged in to view order details.</p>
+      </div>
+    );
+  }
 
   useEffect(() => {
     // Try to get the order from location.state (if navigated from ProfilePage)
@@ -77,7 +88,7 @@ const OrderDetailsPage: React.FC = () => {
 
   return (
     <div className="flex flex-col items-center p-6 space-y-6 text-black">
-      <div className="w-full max-w-3xl space-y-6">
+      <div className="w-full max-w-5xl space-y-6">
         <Card>
           <CardHeader>
             <CardTitle>Order #{order.id}</CardTitle>
