@@ -123,7 +123,7 @@ const DashboardPage: React.FC = () => {
           ) : error ? (
             <div className="text-red-600">{error}</div>
           ) : (
-            <ScrollArea className="w-full max-h-[500px] overflow-x-auto">
+            <ScrollArea className="w-full max-h-[500px] overflow-x-auto custom-scrollbar">
               <table className="min-w-full text-black">
                 <thead>
                   <tr>
