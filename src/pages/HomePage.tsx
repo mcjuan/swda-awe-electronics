@@ -4,10 +4,18 @@ import { fetchProducts } from "@/services/productService";
 import ProductCard from "@/components/features/product/ProductCard";
 import { useLocation } from "react-router-dom";
 
+const sortOptions = [
+  { value: "price-asc", label: "Price: Low to High" },
+  { value: "price-desc", label: "Price: High to Low" },
+  { value: "name-asc", label: "Name: A-Z" },
+  { value: "name-desc", label: "Name: Z-A" },
+];
+
 const HomePage: React.FC = () => {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [sort, setSort] = useState<string>("price-asc");
   const location = useLocation();
   const params = new URLSearchParams(location.search);
   const search = params.get("search")?.toLowerCase() || "";
@@ -17,6 +25,23 @@ const HomePage: React.FC = () => {
       product.name.toLowerCase().includes(search) ||
       product.description.toLowerCase().includes(search)
   );
+
+  // Sorting logic
+  const sortedProducts = [...filteredProducts].sort((a, b) => {
+    switch (sort) {
+      case "price-asc":
+        return a.price - b.price;
+      case "price-desc":
+        return b.price - a.price;
+      case "name-asc":
+        return a.name.localeCompare(b.name);
+      case "name-desc":
+        return b.name.localeCompare(a.name);
+      default:
+        return 0;
+    }
+  });
+
   useEffect(() => {
     const getProducts = async () => {
       try {
@@ -52,14 +77,35 @@ const HomePage: React.FC = () => {
 
   return (
     <div className="container mx-auto p-4">
-      <h1 className="text-3xl font-bold mb-6 text-center">Our Products</h1>
-      {filteredProducts.length === 0 && !loading ? (
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 gap-4">
+        <h1 className="text-3xl font-bold text-center sm:text-left">
+          Our Products
+        </h1>
+        <div className="flex items-center gap-2">
+          <label htmlFor="sort" className="font-medium text-gray-700">
+            Sort by:
+          </label>
+          <select
+            id="sort"
+            value={sort}
+            onChange={(e) => setSort(e.target.value)}
+            className="border rounded px-2 py-1"
+          >
+            {sortOptions.map((opt) => (
+              <option key={opt.value} value={opt.value}>
+                {opt.label}
+              </option>
+            ))}
+          </select>
+        </div>
+      </div>
+      {sortedProducts.length === 0 && !loading ? (
         <p className="text-center">
           No products found{search ? ` for "${search}"` : ""}.
         </p>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {filteredProducts.map((product) => (
+          {sortedProducts.map((product) => (
             <ProductCard key={product.id} product={product} />
           ))}
         </div>
