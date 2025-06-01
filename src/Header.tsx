@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { useCart } from "@/context/CartContext";
 import CartSideBar from "./CartSideBar";
 import { useState } from "react";
+import Searchbar from "./Searchbar";
 
 function Header() {
   const { currentUser, logout, isLoading } = useAuth();
@@ -27,6 +28,9 @@ function Header() {
         >
           AWE Electronics
         </Link>
+        <div className="flex-1 flex justify-center px-4">
+          <Searchbar />
+        </div>
         <nav className="flex items-center gap-2 sm:gap-4">
           <Link
             to="/"
