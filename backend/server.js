@@ -16,9 +16,12 @@ import session from "express-session";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+const clientBuildPath = path.resolve(__dirname, "../dist");
 
 const app = express();
 const PORT = 3001;
+
+app.use(express.static(clientBuildPath));
 
 app.use(
   session({
@@ -79,6 +82,13 @@ app.get("/api/products", productController.getAllProducts);
 app.post("/api/createOrder", requireAuth, orderController.createOrder);
 app.post("/api/orderHistory", requireAuth, orderController.getOrdersByUserId);
 app.post("/api/orderAll", requireAdmin, orderController.getAllOrders);
+
+app.use((req, res, next) => {
+  if (req.path.startsWith("/api/")) {
+    return next();
+  }
+  res.sendFile("index.html", { root: clientBuildPath });
+});
 
 // Start Server
 app.listen(PORT, () => {
